@@ -1,5 +1,7 @@
 function main() {
     var menuform = FormApp.openById('1A3a2zD6GvE2PUE4kRUqDZODzSKnxQaMaEUvzgASDSbY'); 
+    var sheet = SpreadsheetApp.openById('10rEoAV9299OqeetmjxIYblAis3duBHQweAv-mzCyOQY').getSheets()[0];
+    var lr = sheet.getLastRow(); 
     var allitems = menuform.getResponses();  
     var i, j; 
 
@@ -14,6 +16,21 @@ function main() {
     var temp_amt; 
     var item_count = 0; 
     var total_cost = 0; 
+
+    /* set the first row */
+    if (lr == 0) {
+        var titles = []; 
+        var items = menuform.getItems(); 
+        for (i = 0; i < items.length; i++) {
+            titles.push(items[i].getTitle()); 
+        }
+
+    }
+
+    for (i = 0; i < titles.length; i++) {
+        sheet.getRange(1, i + 1).setValue(titles[i]); 
+    }
+    
 
     for (j = 0; j < responses.length; j++) {
         if (responses[j].getItem().getType() == FormApp.ItemType.TEXT) {
@@ -64,6 +81,6 @@ function main() {
     output.amount = amount; 
     output.food = food; 
     output.cost = cost;
-    Logger.log(output.comments); 
+    
  
 }
