@@ -17,23 +17,21 @@ function main() {
     var item_count = 0; 
     var total_cost = 0; 
     var items = menuform.getItems();
+    var titles = [];
+    for (i = 0; i < items.length; i++) {
+        titles.push(items[i].getTitle());
+    }
 
     /* set the first row */
     if (lr == 0) {
-        var titles = [];  
-        for (i = 0; i < items.length; i++) {
-            titles.push(items[i].getTitle()); 
-        }
         for (i = 0; i < titles.length; i++) {
             sheet.getRange(1, i + 1).setValue(titles[i]);
         }
-        sheet.getRange(1, 1, 1, titles.length).setFontWeight("bold"); 
-        sheet.getRange(1, 1, 1, titles.length).setBackground("#cfe2f3"); 
-
+        sheet.getRange(1, i + 1).setValue("Total Due"); 
+        sheet.getRange(1, 1, 1, titles.length+1).setFontWeight("bold"); 
+        sheet.getRange(1, 1, 1, titles.length+1).setBackground("#cfe2f3"); 
+        lr = lr + 1; 
     }
-
-   
-    
 
     for (j = 0; j < responses.length; j++) {
         if (responses[j].getItem().getType() == FormApp.ItemType.TEXT) {
@@ -85,7 +83,22 @@ function main() {
     output.food = food; 
     output.cost = cost;
 
-    sheet.getRange(lr, 1, 1, 1).setValue(output.name);
-    sheet.getRange(lr, items.length, 1, 1).setValue(output.comments); 
+    sheet.getRange(lr+1, 1, 1, 1).setValue(output.name);
+    sheet.getRange(lr + 1, items.length, 1, 1).setValue(output.comments); 
+    sheet.getRange(lr + 1, items.length + 1, 1, 1).setValue("$" + total_cost); 
+
+    if (output.delivery == 1) {
+        sheet.getRange(lr + 1, 2, 1, 1).setValue("Home Delivery"); 
+    }
+    else {
+        sheet.getRange(lr + 1, 2, 1, 1).setValue(output.pickup); 
+    }
+
+    for (i = 0; (i < titles.length) ; i++) {
+        if (output.amount[i]>0) {
+            sheet.getRange(lr + 1, i + 3, 1, 1).setValue(output.amount[i]); 
+            
+        }
+    }
  
 }
