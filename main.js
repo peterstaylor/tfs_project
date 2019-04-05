@@ -16,20 +16,23 @@ function main() {
     var temp_amt; 
     var item_count = 0; 
     var total_cost = 0; 
+    var items = menuform.getItems();
 
     /* set the first row */
     if (lr == 0) {
-        var titles = []; 
-        var items = menuform.getItems(); 
+        var titles = [];  
         for (i = 0; i < items.length; i++) {
             titles.push(items[i].getTitle()); 
         }
+        for (i = 0; i < titles.length; i++) {
+            sheet.getRange(1, i + 1).setValue(titles[i]);
+        }
+        sheet.getRange(1, 1, 1, titles.length).setFontWeight("bold"); 
+        sheet.getRange(1, 1, 1, titles.length).setBackground("#cfe2f3"); 
 
     }
 
-    for (i = 0; i < titles.length; i++) {
-        sheet.getRange(1, i + 1).setValue(titles[i]); 
-    }
+   
     
 
     for (j = 0; j < responses.length; j++) {
@@ -81,6 +84,8 @@ function main() {
     output.amount = amount; 
     output.food = food; 
     output.cost = cost;
-    
+
+    sheet.getRange(lr, 1, 1, 1).setValue(output.name);
+    sheet.getRange(lr, items.length, 1, 1).setValue(output.comments); 
  
 }
